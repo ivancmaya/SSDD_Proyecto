@@ -4,6 +4,10 @@
 #include "freertos/task.h"
 #include "esp_system.h"
 #include "esp_spi_flash.h"
+#include "nvs_flash.h"
+
+#include "lwip/err.h"
+#include "lwip/sys.h"
 
 #include "wifi_setup.h"
 #include "mqtt_setup.h"
@@ -11,6 +15,14 @@
 
 void app_main(void)
 {
+    //Inicializacion NVS
+    esp_err_t err = nvs_flash_init();
+    if (err == ESP_ERR_NVS_NO_FREE_PAGES || err == ESP_ERR_NVS_NEW_VERSION_FOUND) {
+      ESP_ERROR_CHECK(nvs_flash_erase());
+      err = nvs_flash_init();
+    }
+    ESP_ERROR_CHECK(err);
+    
     start_wifi_ap_sta();
     
     esp_mqtt_client_handle_t client = mqtt_client_start();
@@ -19,8 +31,8 @@ void app_main(void)
     {
         struct dht11_reading data_dht = DHT11_read();
 
-        mqtt_publish_data(client, "sensors/temperatura", data_dht.temperature);
-        mqtt_publish_data(client, "sensors/humedad", data_dht.humidity);
+        mqtt_publish_data(client, "sensors/temperatura", "32 C"/*data_dht.temperature*/);
+        mqtt_publish_data(client, "sensors/humedad", "18 %"/*data_dht.humidity*/);
 
         vTaskDelay(30000/portTICK_PERIOD_MS);
     }

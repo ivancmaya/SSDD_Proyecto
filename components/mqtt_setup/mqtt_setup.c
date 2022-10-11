@@ -59,7 +59,7 @@ void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_t event
 esp_mqtt_client_handle_t mqtt_client_start(void)
 {
     esp_mqtt_client_config_t mqtt_cfg = {
-        .uri = "url",
+        .uri = "mqtt://192.168.0.3",
         .port = 1883,
         .username = "user",
     };

@@ -1,6 +1,10 @@
 #ifndef WIFI_SETUP_
 #define WIFI_SETUP_
 
+#include "esp_system.h"
+#include "esp_wifi.h"
+#include "esp_event.h"
+
 /*
     Funcion para manejar los eventos derivados de la conexion Wi-Fi
 */
