@@ -35,19 +35,19 @@ void pwm_init(void)
 
 void pwm_control_fan(int estado)
 {
-    //Si la temperatura interior es superior a 25ºC, el ventilador trabaja al 100%
+    //Si la temperatura es superior a 25ºC, el ventilador trabaja al 100%
     if (estado == 2) {
         ESP_ERROR_CHECK( ledc_set_duty(LEDC_MODE, LEDC_CHANNEL, 8190) );  //Ciclo de trabajo: 100%
         ESP_ERROR_CHECK( ledc_update_duty(LEDC_MODE, LEDC_CHANNEL) );
         ESP_LOGI(TAG, "Ventilador al 100");
     } 
-    //Si la temperatura interior es superior a 20ºC, el ventilador trabaja al 50%
+    //Si la temperatura es superior a 20ºC, el ventilador trabaja al 50%
     else if (estado == 1) {
         ESP_ERROR_CHECK( ledc_set_duty(LEDC_MODE, LEDC_CHANNEL, 1023) );  //Ciclo de trabajo: 50%
         ESP_ERROR_CHECK( ledc_update_duty(LEDC_MODE, LEDC_CHANNEL) );
         ESP_LOGI(TAG, "Ventilador al 50");
     }
-    //Si la temperatura interior es inferior a 20ºC, el ventilador se apaga
+    //Si la temperatura es inferior a 20ºC, el ventilador se apaga
     else {
         ESP_ERROR_CHECK( ledc_set_duty(LEDC_MODE, LEDC_CHANNEL, 1) );  //Ciclo de trabajo: 0%
         ESP_ERROR_CHECK( ledc_update_duty(LEDC_MODE, LEDC_CHANNEL) );

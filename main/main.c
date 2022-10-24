@@ -17,9 +17,11 @@
 
 void app_main(void)
 {
+    //Buffers para los datos del sensor DHT11
     char* temperatura[10];
     char* humedad[10];
 
+    //Inicializacion de los GPIO empleados
     gpio_reset_pin(CONFIG_LED_1);
     gpio_set_direction(CONFIG_LED_1, GPIO_MODE_OUTPUT);
 
@@ -37,23 +39,31 @@ void app_main(void)
     }
     ESP_ERROR_CHECK(err);
 
+    //Inicializacion sensor DHT11
     DHT11_init(CONFIG_DHT_11_GPIO);
 
+    //Inicializacion señal PWM
     pwm_init();
-    
+
+    //Inicializacion conexion Wi-Fi
     start_wifi_ap_sta();
     
+    //Inicializacion cliente MQTT
     esp_mqtt_client_handle_t client = mqtt_client_start();
 
     while(1)
     {
+        //Lectura de los datos del sensor DHT11
         struct dht11_reading data_dht = DHT11_read();
 
         itoa(data_dht.temperature, temperatura, 10);
         itoa(data_dht.humidity, humedad, 10);
 
+        //Publicacion de los datos de temperatura y humedad
         mqtt_publish_data(client, "sensors/temperatura", temperatura);
         mqtt_publish_data(client, "sensors/humedad", humedad);
+
+        //Subscripcion a los topic de los actuadores
         int msg_id_1 = esp_mqtt_client_subscribe(client, "actuador/led1", 1);
         int msg_id_2 = esp_mqtt_client_subscribe(client, "actuador/led2", 1);
         int msg_id_3 = esp_mqtt_client_subscribe(client, "actuador/ventilador", 1);
