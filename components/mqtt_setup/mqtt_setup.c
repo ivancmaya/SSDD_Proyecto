@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stddef.h>
+#include <stdlib.h>
 #include <string.h>
 #include "esp_system.h"
 #include "esp_log.h"
+#include "driver/gpio.h"
 
 
 #include "freertos/FreeRTOS.h"
@@ -16,6 +18,9 @@
 #include "lwip/netdb.h"
 
 #include "mqtt_client.h"
+
+#include "mqtt_setup.h"
+#include "pwm_control.h"
 
 static const char *TAG = "MQTT_SETUP";
 
@@ -46,6 +51,45 @@ void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_t event
             ESP_LOGI(TAG, "MQTT_EVENT_DATA");
             printf("TOPIC=%.*s\r\n", event->topic_len, event->topic);
             printf("DATA=%.*s\r\n", event->data_len, event->data);
+            printf("%s", event->data);
+            if(!strcmp(event->topic, "actuador/ventilador")) {
+                if(!strncmp("2", event->data, 1)) {
+                    pwm_control_fan(2);
+                    vTaskDelay(100/portTICK_PERIOD_MS);
+                }
+                else if(!strncmp("1", event->data, 1)) {
+                    pwm_control_fan(1);
+                    vTaskDelay(100/portTICK_PERIOD_MS);
+                }
+                else if(!strncmp("0", event->data, 1)) {
+                    pwm_control_fan(0);
+                    vTaskDelay(100/portTICK_PERIOD_MS);
+                }
+            }
+            else if(!strcmp(event->topic, "actuador/led1")) {
+                if(!strncmp("true", event->data, 4)) {
+                    gpio_set_level(CONFIG_LED_1, 1);
+                    printf("True led1");
+                    vTaskDelay(100/portTICK_PERIOD_MS);
+                }
+                else if(!strncmp("false", event->data, 5)) {
+                    gpio_set_level(CONFIG_LED_1, 0);
+                    printf("False led1");
+                    vTaskDelay(100/portTICK_PERIOD_MS);
+                }
+            }
+            else if(!strcmp(event->topic, "actuador/led2")) {
+                if(!strncmp("true", event->data, 4)) {
+                    gpio_set_level(CONFIG_LED_2, 1);
+                    printf("True led2");
+                    vTaskDelay(100/portTICK_PERIOD_MS);
+                }
+                else if(!strncmp("false", event->data, 5)) {
+                    gpio_set_level(CONFIG_LED_2, 0);
+                    printf("False led2");
+                    vTaskDelay(100/portTICK_PERIOD_MS);
+                }
+            }
             break;
         case MQTT_EVENT_ERROR:
             ESP_LOGI(TAG, "MQTT_EVENT_ERROR");

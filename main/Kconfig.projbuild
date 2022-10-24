@@ -27,13 +27,13 @@ menu "Application Configuration"
 
     config ESP_WIFI_STA_SSID
         string "WiFi AP SSID"
-        default "SSID"
+        default "iPhone (2)"
         help
             SSID (network name) for the example to connect to.
 
     config ESP_WIFI_STA_PASSWORD
         string "WiFi Password"
-        default "password"
+        default "tive3hihok4yj"
         help
             WiFi password (WPA or WPA2) for the example to use.
 
@@ -42,5 +42,28 @@ menu "Application Configuration"
         default 5
         help
             Set the Maximum retry to avoid station reconnecting to the AP unlimited when the AP is really inexistent.
-	
+
+	config LED_1
+		int "LED 1"
+		default 27
+		help
+			GPIO number for red LED
+
+	config LED_2
+		int "LED 2"
+		default 26
+		help
+			GPIO number for yellow LED
+
+	config LEDC_OUTPUT_IO
+		int "PWM OUT"
+		default 14
+		help
+			GPIO number for PWM signal
+
+	config DHT_11_GPIO
+		int "DHT 11 Signal"
+		default 12
+		help
+			GPIO number for DHT11 signal
 endmenu

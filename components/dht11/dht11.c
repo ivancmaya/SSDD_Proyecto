@@ -6,7 +6,7 @@
 
 #include "dht11.h"
 
-static gpio_num_t dht_gpio = 16;
+static gpio_num_t dht_gpio = CONFIG_DHT_11_GPIO;
 static int64_t last_read_time = -2000000;
 static struct dht11_reading last_read;
 
