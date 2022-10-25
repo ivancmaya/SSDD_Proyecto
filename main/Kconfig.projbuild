@@ -27,13 +27,13 @@ menu "Application Configuration"
 
     config ESP_WIFI_STA_SSID
         string "WiFi AP SSID"
-        default "iPhone (2)"
+        default "SSID"
         help
             SSID (network name) for the example to connect to.
 
     config ESP_WIFI_STA_PASSWORD
         string "WiFi Password"
-        default "tive3hihok4yj"
+        default "password"
         help
             WiFi password (WPA or WPA2) for the example to use.
 
